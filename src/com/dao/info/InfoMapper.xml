@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.info.InfoMapper">
+<!-- 书写一个sql片段 -->
+<sql id="getInfos">
+ <!-- 通过书名模糊查询 -->
+   <if test="name !=null">
+     and bookName like concat('%',#{name},'%')
+   </if>
+   <!-- 通过类别编号查询 -->
+   <if test="id !=0">
+     and categoryId=#{id}
+   </if>
+</sql>
+<!-- 查询数据库总条数 -->
+<select id="getCount" resultType="int">
+	SELECT COUNT(1) FROM book_info
+	<where>
+	    <include refid="getInfos"></include>
+	</where>
+</select>
+	<resultMap type="Category" id="categoryList">
+		<id property="id" column="id"/>
+		<result property="category" column="category"/>
+	</resultMap>
+	<resultMap type="Info" id="infoList" autoMapping="true">
+		<association property="category" resultMap="categoryList" javaType="Category"></association>
+	</resultMap>
+	<!-- 查询全部数据的分页 -->
+	<select id="getAll" resultMap="infoList">
+		SELECT i.*,c.category FROM book_info i INNER JOIN book_category c ON(i.categoryId=c.id)
+		<where>
+		   <include refid="getInfos"></include>
+		</where>
+	    limit #{currpage},#{pageSize}
+	</select>
+	<!-- 多条件删除 -->
+	<delete id="delInfo">
+	delete from book_info
+	<where>
+		<if test="id !=0">
+		   and id=#{id}
+		  </if>
+	    <if test="cid !=0">
+		   and categoryId=#{cid}
+		</if>
+	</where>
+	</delete>
+	<!-- 查询数据通过类别或者id编号查询 -->
+	<select id="getByCid" resultMap="infoList">
+	 SELECT i.*,c.category,c.id FROM book_info i INNER JOIN book_category c ON(i.categoryId=c.id)
+	 <where>
+		  <if test="id !=0">
+		   and i.id=#{id}
+		  </if>
+		  <if test="cid !=0">
+		   and categoryId=#{cid}
+		  </if>
+	 </where>
+	</select>
+	<!-- 增加数据 -->
+	<insert id="addInfo" parameterType="Info">
+	INSERT  INTO `book_info`(`bookName`,`author`,`categoryId`,`publisher`,`price`,`photo`) 
+	VALUES(#{bookName},#{author},#{categoryId},#{publisher},#{price},#{photo})
+	</insert>
+	<!-- 修改数据 -->
+	<update id="updateInfo" parameterType="Info">
+	UPDATE book_info SET `bookName`=#{bookName},`author`=#{author},`categoryId`=#{categoryId},`publisher`=#{publisher},`price`=#{price},`photo`=#{photo}
+    WHERE `id`=#{id}
+	 </update>
+</mapper>

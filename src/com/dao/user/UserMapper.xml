@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.user.UserMapper">
+   <!-- 定义一个sql片段 -->
+   <sql id="showColumn">
+   userId,userPsw,userName,role
+   </sql>
+   <select id="isValidation" resultType="int">
+   SELECT count(1) FROM book_user WHERE userId=#{userid} and userPsw=#{psw}
+   </select>
+   <insert id="saveUser" parameterType="User">
+    INSERT INTO book_user(<include refid="showColumn"></include>)
+    VALUES(#{userId},#{userPsw},#{userName},#{role})
+   </insert>
+   <!-- 查询用户角色 -->
+   <select id="getByRole" resultType="int">
+     SELECT role FROM book_user WHERE userId=#{id}
+   </select>
+</mapper>
