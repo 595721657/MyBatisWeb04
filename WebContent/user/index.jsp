@@ -15,7 +15,7 @@
 		<div id="header">
 			<div id="tool-bar">
 				<c:if test="${!empty name }" var="isOK">   		
-    		&nbsp;&nbsp; 欢迎<mark style="color: red;">${name }</mark>光临智远图书网
+    		&nbsp;&nbsp; 欢迎<mark style="color: red;">${name }</mark>光临智远图书网[<a href="${pageContext.request.contextPath }/User?op=login_out">退出</a>]
     		</c:if>
 				<c:if test="${!isOK }">
     		 [<a href="user-login.jsp">请登录</a>]&nbsp;[<a
@@ -69,7 +69,7 @@
 								出版社：${bo.publisher }<br /> 售价：￥<span style="color: #990000;" class="book_price">${bo.price }</span>
 								<br />
 							</div>
-							<a onclick="add('${bo.id}')" style="cursor:pointer" class="btn-buy">购&nbsp;&nbsp;买</a>
+							<a onclick="add(this,'${bo.id}')" style="cursor:pointer" class="btn-buy">购&nbsp;&nbsp;买</a>
 							<div class="cf"></div>
 						</div>
 					</c:forEach>
@@ -91,11 +91,11 @@
 	</div>
 	<script type="text/javascript">
     	/* 使用AJAX提交删除方法 */
-		function add(id) {
+		function add(obj,id) {
 				//使用Ajax来进行后台请求
 				$(function() {
 					var bid=id;//图书id
-			    	var currprice=$(".book_price").html();//单价
+					var currprice=$(obj).prev().find("span").eq(1).text();//单价
 					$.post({
 						url : "Orders?op=add",//请求的servelt名称
 						type : "post",

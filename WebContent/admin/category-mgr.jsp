@@ -16,14 +16,14 @@
 			<h1>智远教育--图书网后台管理系统</h1>
 		</div>
 		<div id="info">${name }，您好！&nbsp;&nbsp;<a
-				href="admin-user-login.html">登出</a>
+				href="${pageContext.request.contextPath }/User?op=login_out">登出</a>
 		</div>
 		<div class="menu">
 			<ul>
 				<li><a href="admin/admin-home.jsp">首页</a></li>
-				<li><a href="admin/category-mgr.jsp">图书分类管理</a></li>
-				<li><a href="${pageContext.request.contextPath }/Info_Admin?op=show">图书管理</a></li>
-				<li><a href="user/cart.jsp">购书订单管理</a></li>
+    			<li><a href="${pageContext.request.contextPath }/Category?op=show">图书分类管理</a></li>
+    			<li><a href="${pageContext.request.contextPath }/Info_Admin?op=show">图书管理</a></li>
+    			<li><a href="admin/book_cart.jsp">购书订单管理</a></li>
 			</ul>
 		</div>
 		<div id="main">
@@ -58,5 +58,31 @@
 			<p>版权所有&copy;智远教育</p>
 		</div>
 	</div>
+	<script type="text/javascript">
+		/* 使用AJAX提交删除方法 */
+		function del(id) {
+			var r = confirm("是否删除");
+			if (r == true) {
+				//使用Ajax来进行后台请求
+				$(function() {
+					$.post({
+						url : "${pageContext.request.contextPath }/Category?op=del",//请求的servelt名称
+						type : "post",
+						data : "id=" + id,//传递的参数值
+						dataType : "text",//后台响应的数据类型
+						success : function(text) {
+							//处理成功时响应数据的方法
+							if (text.trim() == "true") {
+								window.location.reload();
+								alert("删除成功！！");
+							} else {
+								alert("删除失败！！");
+							}
+						}
+					});
+				})
+			}
+		}
+	</script>
 </body>
 </html>

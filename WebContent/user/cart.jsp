@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>        
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"  prefix="fmt"%>
  <!DOCTYPE HTML>
 <html>
   <head>
@@ -13,7 +14,7 @@
     	<div id="header">
     		<div id="tool-bar">
     		<c:if test="${!empty name }" var="isOK">   		
-    		&nbsp;&nbsp; 欢迎<mark style="color: red;">${name }</mark>光临智远图书网
+    		&nbsp;&nbsp; 欢迎<mark style="color: red;">${name }</mark>光临智远图书网[<a href="${pageContext.request.contextPath }/User?op=login_out">退出</a>]
     		</c:if>
     		<c:if test="${!isOK }">
     		 [<a href="user-login.jsp">请登录</a>]&nbsp;[<a href="user-regist.jsp">免费注册</a>]
@@ -51,11 +52,11 @@
 	    					<td>${ord.info.bookName } </td>
 	    					<td>￥${ord.info.price } </td>
 	    					<td><button onclick="del_book(this)">-</button><input type="text" value="${ord.count }" style="width: 18px;"><button onclick="add(this)">+</button> 本</td>
-	    					<td>￥${ord.curPrice } </td>
+	    					<td>￥<fmt:formatNumber value="${ord.curPrice } " pattern="0.00"/></td>
 	    				  </tr>
     				</c:forEach>
     				<tr>
-    					<td colspan="5" class="header" style="text-align: right;">总计：￥${totlePrice }</td>
+    					<td colspan="5" class="header" style="text-align: right;">总计：￥<fmt:formatNumber value="${totlePrice }" pattern="0.00"/><span id="showTotal"></span></td>
     				</tr>
     			</table>	
     			<div style="text-align: center; font-size: 14px; line-height: 40px;">
@@ -68,7 +69,7 @@
 	</div>
 		<script type="text/javascript">
 			$(function(){
-				//calc();
+				calc();
 			});
 			//增加数量
 			function add(obj) {
@@ -126,9 +127,14 @@
 				});
 			}
 			//统计总价
-			function calc() {
-				
-			}
+			/* function calc() {
+				var totalPrice=0;
+				$(".calcTr").each(function(){
+					totalPrice += parseFloat($(this).find("td").eq(4).text().substring(1));
+				})
+				alert(totalPrice);
+				$("#showTotal").text(totalPrice);
+			} */
 		</script>
   </body>
 </html>

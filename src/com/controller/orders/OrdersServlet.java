@@ -75,12 +75,13 @@ public class OrdersServlet extends HttpServlet {
 	private void addOrders(HttpServletRequest req, HttpServletResponse resp) {
 		try {
 			int bid=Integer.parseInt(req.getParameter("bid"));
+			System.out.println("123:"+bid);
 			double count=1;//数量默认给1
 			double curPrice=count*Double.parseDouble(req.getParameter("curprice"));
 		    Date date=MyBatisUtils.getDate();
 		    String uid=(String) req.getSession().getAttribute("name");
 		    String oid=uid+MyBatisUtils.GetId();//用户id+时间
-		    list=os.getAll(null,bid);
+		    list=os.getAll(uid,bid);
 		    if(list.isEmpty()) {
 		    	count=1;
 			    Orders orders=new Orders(oid, bid, count, curPrice, date, uid);
@@ -92,6 +93,7 @@ public class OrdersServlet extends HttpServlet {
 		    }		    
 		    req.getSession().setAttribute("totlePrice", os.getAllPrice(uid));
 		    PrintWriter out = resp.getWriter();
+		    System.out.println("ispass:"+isPass);
 			if(isPass) {
 				//增加成功
 				out.write("true");

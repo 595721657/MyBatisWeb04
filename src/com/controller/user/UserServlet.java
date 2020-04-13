@@ -41,8 +41,22 @@ public class UserServlet extends HttpServlet {
 		}else if("add".equals(op)) {
 			  //添加用户
 			  addUser(req,resp);
+		}else if("login_out".equals(op)) {
+			 //退出登录
+			 login_outUser(req,resp);
 		}
 	}
+	//退出登录
+	private void login_outUser(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			//清除serssion的数据
+			req.getSession().invalidate();
+			resp.sendRedirect("user/user-login.jsp");
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	//添加用户
 	private void addUser(HttpServletRequest req, HttpServletResponse resp) {
 		try {
