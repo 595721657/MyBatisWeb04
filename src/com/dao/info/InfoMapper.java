@@ -10,7 +10,7 @@ public interface InfoMapper {
      //查询数据库条数多条件筛选
      int getCount(@Param("name") String name,@Param("id") int categoryId);
      //通过书名模糊查询分页的方法多条件筛选
-     List<Info> getAll(@Param("currpage") int currPage,@Param("pageSize") int pageSize,@Param("name") String name,@Param("id") int categoryId);
+     List<Info> getAll(@Param("form") int currPage,@Param("pageSize") int pageSize,@Param("name") String name,@Param("id") int categoryId);
      //通过多条件删除
 	 int delInfo(@Param("id") int id,@Param("cid") int cid);
 	 //通过类别删除数据

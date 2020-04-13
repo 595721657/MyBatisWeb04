@@ -22,7 +22,7 @@
 						href="user-regist.jsp">免费注册</a>]
     		</c:if>
 				&nbsp;&nbsp;&nbsp;<a href="user/index.jsp">首页</a>&nbsp;|&nbsp;<a
-					href="cart.jsp">购物车</a>&nbsp;|&nbsp;<a href="#">我的订单</a>&nbsp;|&nbsp;<a
+					href="${pageContext.request.contextPath }/Orders?op=show">购物车</a>&nbsp;|&nbsp;<a href="${pageContext.request.contextPath }/Orders?op=show">我的订单</a>&nbsp;|&nbsp;<a
 					href="#">帮助</a>
 			</div>
 			<h1>
@@ -31,7 +31,7 @@
 			</h1>
 		</div>
 		<form id="search-bar"
-			action="${pageContext.request.contextPath }/Info?op=find_name"
+			action="${pageContext.request.contextPath }/Info?op=show&pageIndex=1"
 			method="post">
 			书名：<input type="text" class="txt" name="condition" /> <input
 				id="search-btn" type="submit" value=" 搜索图书 " />
@@ -43,8 +43,7 @@
 					<div class="box-content">
 						<c:forEach items="${category }" var="ca">
 							<p>
-								·<a
-									href="${pageContext.request.contextPath }/Info?op=find_id&id=${ca.id}">${ca.category }</a>
+								·<a href="${pageContext.request.contextPath }/Info?op=show&pageIndex=1&id=${ca.id}">${ca.category }</a>
 							</p>
 						</c:forEach>
 					</div>
@@ -75,27 +74,12 @@
 						</div>
 					</c:forEach>
 					<div class="paging">
-						<c:if test="${option eq 'show' }">
-							<span class="fr"><a
-								href="${pageContext.request.contextPath }/Info?op=show&pageIndex=1">首页</a>&nbsp;<a
-								href="${pageContext.request.contextPath }/Info?op=show&pageIndex=${pg.currPage-1 }">上一页</a>&nbsp;<a
-								href="${pageContext.request.contextPath }/Info?op=show&pageIndex=${pg.currPage+1 }">下一页</a>&nbsp;<a
-								href="#">尾页</a>&nbsp;</span>
-						</c:if>
-						<c:if test="${option eq 'id' }">
-							<span class="fr"><a
-								href="${pageContext.request.contextPath }/Info?op=find_id&pageIndex=1">首页</a>&nbsp;<a
-								href="${pageContext.request.contextPath }/Info?op=find_id&pageIndex=${pg.currPage-1 }">上一页</a>&nbsp;<a
-								href="${pageContext.request.contextPath }/Info?op=find_id&pageIndex=${pg.currPage+1 }">下一页</a>&nbsp;<a
-								href="#">尾页</a>&nbsp;</span>
-						</c:if>
-						<c:if test="${option eq 'name' }">
-							<span class="fr"><a
-								href="${pageContext.request.contextPath }/Info?op=find_name&pageIndex=1">首页</a>&nbsp;<a
-								href="${pageContext.request.contextPath }/Info?op=find_name&pageIndex=${pg.currPage-1 }">上一页</a>&nbsp;<a
-								href="${pageContext.request.contextPath }/Info?op=find_name&pageIndex=${pg.currPage+1 }">下一页</a>&nbsp;<a
-								href="#">尾页</a>&nbsp;</span>
-						</c:if>
+							<span class="fr">
+							【第${pg.currPage }页/共${pg.totalPages}页】
+							<a href="${pageContext.request.contextPath }/Info?op=show&pageIndex=1">首页</a>&nbsp;
+							<a href="${pageContext.request.contextPath }/Info?op=show&pageIndex=${pg.currPage-1 }">上一页</a>&nbsp;
+							<a href="${pageContext.request.contextPath }/Info?op=show&pageIndex=${pg.currPage+1 }">下一页</a>&nbsp;
+							<a href="#">尾页</a>&nbsp;</span>
 					</div>
 				</div>
 			</div>
@@ -111,19 +95,17 @@
 				//使用Ajax来进行后台请求
 				$(function() {
 					var bid=id;//图书id
-			    	var curprice=$(".book_price").val();//单价
-			    	alert(id);
-			    	alert(currprice);
+			    	var currprice=$(".book_price").html();//单价
 					$.post({
 						url : "Orders?op=add",//请求的servelt名称
 						type : "post",
-						data : "bid=" + bid&"curprice="+curprice,//传递的参数值
+						data : "bid=" + bid+"&curprice="+currprice,//传递的参数值
 						dataType : "text",//后台响应的数据类型
 						success : function(text) {
 							//处理成功时响应数据的方法
-							if (text.trim() == "true") {
-								window.location.reload();
+							if (text.trim() == "true") {	
 								alert("增加成功！！");
+								window.open("${pageContext.request.contextPath }/Orders?op=show");
 							} else {
 								alert("增加失败！！");
 							}

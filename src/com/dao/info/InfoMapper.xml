@@ -32,7 +32,7 @@
 		<where>
 		   <include refid="getInfos"></include>
 		</where>
-	    limit #{currpage},#{pageSize}
+	    limit #{form},#{pageSize}
 	</select>
 	<!-- 多条件删除 -->
 	<delete id="delInfo">
